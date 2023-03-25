@@ -8,7 +8,7 @@ public class CharacterAnimController : MonoBehaviour
     ButtonController buttonController;
     public static float animTime; //Her click'de shoot click bunu sýfýrlayacak boylelikle oyuncu animasyon bitmeden buttona basamayacak.
     bool isAnimRunning;
-
+    public static float animTime2;
     //Transform sceneTransform;
     //[SerializeField] GameObject Scene;
     // Start is called before the first frame update
@@ -21,14 +21,15 @@ public class CharacterAnimController : MonoBehaviour
 
     public void AnimTiming()
     {
-        if (animTime < 1.28f)
+        if (animTime < 1f)
         {
             Debug.Log("Buradayiz;");
             animTime += Time.deltaTime;
         }
         else
         {
-            ButtonController.isShoot = false;         
+            ButtonController.isShoot = false;
+            ButtonController.isJump = false;
         }
     }
 
@@ -51,6 +52,28 @@ public class CharacterAnimController : MonoBehaviour
             anim.SetBool("shot", false);
         }
         
+
+         if(ButtonController.isJump == true)
+        {
+            anim.SetBool("backflip", true);
+            AnimTiming();
+
+        }
+        else
+        {
+            anim.SetBool("backflip", false);
+        }
+        
+        /*if (Input.GetKeyDown(KeyCode.Space))
+        {
+            anim.SetBool("backflip", true);
+            AnimTiming();
+        }
+        else
+        {
+            anim.SetBool("backflip", false);
+        }
+        */
         /*if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
         {
             anim.SetBool("shot", false);

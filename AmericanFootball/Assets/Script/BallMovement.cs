@@ -19,6 +19,10 @@ public class BallMovement : MonoBehaviour
     [SerializeField] GameObject cube;
     CatchBall catchBall;
     float AnimTime;
+    public static bool isHoldBall;
+    int sayac;
+    public Collider BallCollider;
+    int sayac1;
     
     
 
@@ -36,9 +40,32 @@ public class BallMovement : MonoBehaviour
 
 
     }
-        private void Start()
+
+    /*private void OnCollisionEnter(Collision collision)
     {
-        
+        if(collision.gameObject.tag == "character")
+        {
+            if(sayac < 1)
+            {
+                sayac++;
+                rigidbody.velocity = new Vector3(0f, 0.1f, 0f);
+            }
+            
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "character")
+        {
+            sayac = 0;
+
+        }
+    }
+    */
+    private void Start()
+    {
+        isHoldBall = true; //Top kimin elinden baþlýyorsa onun referansýnda bu deðer true olmalý 
+        //isHoldBallPlayer2 = true; //Top kimin elinden baþlýyorsa onun referansýnda bu deðer true olmalý (Bu bir static deðer olduðu için ayrý ayrý referanslandýrýlamaz bu nedenle 2 tane ayrý static deðiþken atadýk 2.oyuncu için)
         catchBall = GetComponent<CatchBall>();
         anim = Character.GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody>();
@@ -53,12 +80,21 @@ public class BallMovement : MonoBehaviour
     
     private void FixedUpdate()
     {
-        
-        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("shot")) //Running anim
+
+        if(isHoldBall == true)
         {
-            time += Time.deltaTime;
-            if (time < 0.1)
+            rigidbody.Sleep();
+            BallCollider.enabled = false;
+        }
+        
+        if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("shot") && isHoldBall) //Bu kod burada yazan mevcut animasyon yürütüldüðü sýrada animasyonun ortalarýnda 1 kez çalýþýr ve true deðeri verir.
+        {
+            sayac1++;
+            Debug.Log("Animasyon Runnn : "+sayac1);
+            time += Time.deltaTime; //Animasyonda karakterin topu elinden çýkarmasý için gereken süre
+            if (time < 0.1) //Burada yazan kodlar gereksiz çünkü zaten bu satýrlar 1 kez çaðrýlýr.
             {
+                
                 Debug.Log(time);
                 transform.rotation = Quaternion.Euler(0, 0, 0);
                 Debug.Log("not playing");
@@ -71,7 +107,9 @@ public class BallMovement : MonoBehaviour
                 shot();
                 var emission = particleSystem.emission;
                 emission.rateOverTime = 500f;
-                
+                BallMovement.isHoldBall = false; //Top elden çýktý
+                BallCollider.enabled = true; //Top elden çýktýktan sonra tekrar çarpýþabilir. Top eldeyken çarpýþabilir olmasý karakterin yüzeyine çarpýp hatalý çalýþmalara sebep oluyor.
+                //isHoldBall sisteminin yapýlma sebebi karakterde ve topta ayný anda rigidbody olduðunda birbirlerine enerji aktarýp oyun içinde hataya sebep oluyor olmalarýdýr.
             }
             
         }
@@ -123,11 +161,12 @@ public class BallMovement : MonoBehaviour
  */
     void shot()
     {
-        Vector3 a = new Vector3(Bodytransform.forward.x, 1.5f, Bodytransform.forward.z); //Topun karsiya gitmesini saglayan z.
+        if(isHoldBall == true)
+        {
+            Vector3 a = new Vector3(Bodytransform.forward.x, 0.1f, Bodytransform.forward.z); //Topun karsiya gitmesini saglayan z. //1.5f eski y vectoru
 
-        rigidbody.velocity = a * speed;
-
-
-
+            rigidbody.velocity = a * speed;
+        }
+        
     }
 }
