@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
     Rigidbody charRB;
     CharacterController characterController;
     public static bool moveRight, moveLeft,isShoot,isJump;
+    public Button ShootButton;
+    //public Button JumpButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +18,26 @@ public class ButtonController : MonoBehaviour
     }
 
     // Update is called once per frame
-    
+
+    private void Update()
+    {
+        if(ShootButton != null)
+        {
+            if (ShootButton.image.fillAmount < 1.0f)
+            {
+                ShootButton.interactable = false;
+                //ShootButton.enabled = false;
+                ShootButton.image.fillAmount += Time.deltaTime * 0.6f;
+            }
+            else
+            {
+                ShootButton.interactable = true;
+                //ShootButton.enabled = true;
+            }
+        }
+        
+            
+    }
     public void IsJump()
     {
         CharacterAnimController.animTime = 0f;
@@ -24,6 +46,8 @@ public class ButtonController : MonoBehaviour
     }
     public void Shoot()
     {
+        ShootButton.image.fillAmount = 0;
+        //ShootButton.interactable = false;
 
         isShoot = true;
         CharacterAnimController.animTime = 0f;
