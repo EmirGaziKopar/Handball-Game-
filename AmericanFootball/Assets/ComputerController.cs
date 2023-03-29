@@ -8,6 +8,8 @@ public class ComputerController : MonoBehaviour
     float randomTime;
     float timer;
     int sayac;
+    int sayac2;
+    int sayac3;
     public float moveRight;
     public Transform front;
     public Transform back;
@@ -15,6 +17,9 @@ public class ComputerController : MonoBehaviour
     float distanceFront;
     float distanceBack;
     float ballDistance;
+    public Animator walk;
+
+    float smoothness = 0;
 
     public static int jumpStopCounter;
 
@@ -30,6 +35,7 @@ public class ComputerController : MonoBehaviour
         {
 
             isGrounded = true;
+            walk.SetBool("backflip", false); // yere düþünce zýplama animasyonu durmalý
         }
     }
     // Start is called before the first frame update
@@ -50,7 +56,10 @@ public class ComputerController : MonoBehaviour
                 rigidbody.velocity = new Vector3(0f, 7f, 0f);
                 isGrounded = false; //yerden yükseldiði için bu deðer false olmalý bu false iken karakter saða sola hareket etmemeli 
                 jumpStopCounter++;
-               
+                walk.SetFloat("Vertical", 0); //sýçrama sýrasýnda yürüme animasyonu kapanmalý zýplama animasyonu çalýþmalý
+                walk.SetBool("backflip",true);
+                //walk.SetBool("backflip", false);
+
             }
 
         }
@@ -63,8 +72,8 @@ public class ComputerController : MonoBehaviour
         {
             Debug.Log("Burasasdsadadý");
             sayac++;
-            randomTime = Random.Range(0.2f, 0.5f);//1,2
-            moveRight = Random.Range(0, 2); //0 or 1; Buradan gelen deðere göre animasyon deðerlerini oluþtur (Blend tree ile)           
+            randomTime = Random.Range(0.5f, 0.8f);//1,2 0.2f , 0.5f
+            moveRight = Random.Range(0, 3); //0 or 1 , added 2 for stability ; Buradan gelen deðere göre animasyon deðerlerini oluþtur (Blend tree ile)           
             StartCoroutine(getRandomTimeAndMove(randomTime)); 
         }
 
@@ -77,6 +86,7 @@ public class ComputerController : MonoBehaviour
 
         if (distanceFront < 0.1f) //Burada yaplan deðiþiklikler farkedilebilsin diye moveRight global deðiþken olarak ayarlandý. Local deðiþken olsaydý burada olan dinamik deðiþiklikleri yakalayamazdýk.
         {
+
             moveRight = 1;
             //getRandomTimeAndMove(randomTime, moveRight);
             
@@ -103,17 +113,50 @@ public class ComputerController : MonoBehaviour
             {
                 if (moveRight == 1)
                 {
-                    rigidbody.velocity = new Vector3(0f, 0f, 5f);
+                    sayac3 = 0;
+                    if (sayac2 < 1)
+                    {
+                        smoothness = 0;
+                        sayac2++; //tekrar tekrar move geldiðinde ayný yöne giderken kesik kesik durmalar olmasýn diye eklendi
+                    }
+                    
+                    walk.SetFloat("Vertical", -1);
+                    if (smoothness < 1)
+                    {
+                        smoothness += Time.deltaTime*4f;
+                    }
+                    
+
+                    rigidbody.velocity = new Vector3(0f, 0f, smoothness * 3f);
+                }
+                else if(moveRight == 2)
+                {
+                    sayac2 = 0; //sayac 2 sýfýrlanmalý çünkü rakip artýk durdu tekrar kalkýþa geçtiðinde smoothness 0 olacak ve yavaþ yavaþ kalkacak
+                    sayac3 = 0;
+                    walk.SetFloat("Vertical", 0f);
+                    rigidbody.velocity = new Vector3(0f, 0f, 0f);
                 }
                 else
                 {
-                    rigidbody.velocity = new Vector3(0f, 0f, -(5f));
+                    sayac2 = 0; //Bu sayaçlar tek yöne iki defa art arda gittiði zaman animasyon durmasýn diye böyle yazýldý
+                    if (sayac3 < 1)
+                    {
+                        smoothness = 0;
+                        sayac3++; //tekrar tekrar move geldiðinde ayný yöne giderken kesik kesik durmalar olmasýn diye eklendi
+                    }
+                    if (smoothness < 1)
+                    {
+                        smoothness += Time.deltaTime*3f;
+                    }
+                    walk.SetFloat("Vertical", 1);
+                    rigidbody.velocity = new Vector3(0f, 0f, -(smoothness * 5f));
                 }
                 print("WaitAndPrint " + Time.time);
             }
             
             yield return new WaitForFixedUpdate();
         }
+        //smoothness = 0;
         timer = 0;
         this.sayac = 0;//Bunu yaparak belirlenen rastgele süre bittiðinde tekrar rakibin hareket etmesini saðlarýz.
         randomTime = 0;

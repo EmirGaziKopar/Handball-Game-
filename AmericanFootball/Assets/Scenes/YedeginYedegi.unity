@@ -48363,6 +48363,7 @@ MonoBehaviour:
   front: {fileID: 1523577224}
   back: {fileID: 2112251417}
   Ball: {fileID: 6773739714594427919}
+  walk: {fileID: 1759936020}
   isGrounded: 0
 --- !u!65 &1759936013
 BoxCollider:

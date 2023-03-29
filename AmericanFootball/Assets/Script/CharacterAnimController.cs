@@ -19,7 +19,7 @@ public class CharacterAnimController : MonoBehaviour
         //sceneTransform = Scene.GetComponent<Transform>();
     }
 
-    public void AnimTiming()
+    public void AnimTiming() //Animasyonlar bittene kadar true kalmasýný saðlar 
     {
         if (animTime < 1f)
         {
