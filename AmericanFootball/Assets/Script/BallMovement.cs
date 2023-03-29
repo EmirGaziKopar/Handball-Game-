@@ -49,6 +49,7 @@ public class BallMovement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         isFastBall = false;
+        ComputerController.isFastShotComputer = false;
     }
 
     /*private void OnCollisionEnter(Collision collision)

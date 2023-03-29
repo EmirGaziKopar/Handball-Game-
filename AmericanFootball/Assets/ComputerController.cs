@@ -41,6 +41,8 @@ public class ComputerController : MonoBehaviour
 
     float slowlyWalkEffect;
 
+    public static bool isFastShotComputer;
+
 
     /*Catch The Ball*/
     public Transform rightHand;
@@ -90,6 +92,7 @@ public class ComputerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isFastShotComputer = true; //**Son eklenen
         ComputerIsShothing = false;
         isHoldTheBallComputer = false;
         BallCollider = Ball.GetComponent<Collider>();
@@ -102,7 +105,7 @@ public class ComputerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        Debug.Log("True : " + isFastShotComputer);
         if (ballDistance < 7f) //Buraya top rakipten çýktýktan sonra herhangi bir objeye çarpýncaya kadar true olacak bir deðer gir****
         {
             if (jumpStopCounter < 1) //Bu deðer karakter shot atýnca 0'lanýr
@@ -119,11 +122,12 @@ public class ComputerController : MonoBehaviour
         }
         //Top elimde deðilse ve hýzlý deðilse ve bana yakýnsa ona yönelmem gerekir.
         //Topu tuttuktan sonra topun peþindeen gitmeye devam ederse eli bedeninin önünde olduðu için sonsuza kadar düz devam eder. 
-        if (ballDistance < 5f && !BallMovement.isFastBall && !isHoldTheBallComputer && transform.position.z > -5f) //Buraya top rakipten çýktýktan sonra herhangi bir objeye çarpýncaya kadar true olacak bir deðer gir****
-        {
+        
+        if (Ball.position.z <= 3.5f && ballDistance < 5f && !BallMovement.isFastBall && !isHoldTheBallComputer && transform.position.z > -5f) //Buraya top rakipten çýktýktan sonra herhangi bir objeye çarpýncaya kadar true olacak bir deðer gir****
+        {          
             Debug.Log("Yavaþ ve yakýn");
             //arkamda mý önümde mi hesaplamam lazým 
-            if(Ball.position.z - transform.position.z < 0)
+            if (Ball.position.z - transform.position.z < 0)
             {
                 moveRight = 0;
             }
@@ -133,12 +137,14 @@ public class ComputerController : MonoBehaviour
             }
             //transform.position = Vector3.MoveTowards(transform.position, Ball.position, 5f);
             //transform.position = new Vector3(transform.position.x, 1.49f, transform.position.z);
+
         }
 
 
         if (this.shootAnim.GetCurrentAnimatorStateInfo(0).IsName("shot") && isHoldTheBallComputer && ComputerIsShothing) //computer is shooting rastgele bir süre de true olup sonra hemen false olan bir deðer.(sayaclý)
         {
             shoot();
+            isFastShotComputer = true;
             ComputerIsShothing = false;
             timer2 = 0; //tekrar edebilmesi için
             shootAnim.SetBool("shot", false);//yukarýda yer alan iþlemler bittikten sonra da tekrar false yapabiliriz.

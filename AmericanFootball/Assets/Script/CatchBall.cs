@@ -20,7 +20,7 @@ public class CatchBall : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.gameObject.CompareTag("ball"))
+        if (other.gameObject.CompareTag("ball") && !ComputerController.isFastShotComputer)
         {
             BallMovement.isHoldBall = true; //Topu tuttum. Oyunun baþýnda top elde baþlayacaksa start'da isHoldBall true olmalýdýr.
             YayEtkisiCollider.enabled = true; //Topun üzerindeki collider zaman zaman buraya erken girildiðinde kapanmýyor ve bu da topu kendine hýzlýca cekip içimizdeki collider ile topun çarpýþmasýna neden oluyor ben buna yay etkisi diyorum. 
