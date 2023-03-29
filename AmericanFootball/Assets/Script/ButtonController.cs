@@ -46,13 +46,17 @@ public class ButtonController : MonoBehaviour
     }
     public void Shoot()
     {
-        ComputerController.jumpStopCounter = 0;
-        ShootButton.image.fillAmount = 0;
-        //ShootButton.interactable = false;
+        if (BallMovement.isHoldBall) //Top sadece elimizdeyse animasyon çalýþsýn
+        {
+            ComputerController.jumpStopCounter = 0;
+            ShootButton.image.fillAmount = 0;
+            //ShootButton.interactable = false;
 
-        isShoot = true;
-        CharacterAnimController.animTime = 0f;
-        //BallMovement.isHoldBall = false; //Top elden çýktý Burada bu kod olmamalýdýr. Aksi taktirde button down olunca top henüz elden çýkmadan rigidbody sleep olur.
+            isShoot = true;
+            CharacterAnimController.animTime = 0f;
+            //BallMovement.isHoldBall = false; //Top elden çýktý Burada bu kod olmamalýdýr. Aksi taktirde button down olunca top henüz elden çýkmadan rigidbody sleep olur.
+        }
+
 
     }
     public void MoveRight()
