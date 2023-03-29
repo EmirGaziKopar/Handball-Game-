@@ -80,24 +80,30 @@ public class BallMovement : MonoBehaviour
     
     private void FixedUpdate()
     {
-
-        if(isHoldBall == true)
+        
+        if(ComputerController.isHoldTheBallComputer == true)
         {
             rigidbody.Sleep();
-            BallCollider.enabled = false;
+            BallCollider.enabled = false; //Top eldeyken karaktere çarpmasýn diye
         }
         
+        if (isHoldBall == true)
+        {
+            rigidbody.Sleep();
+            BallCollider.enabled = false; //Top eldeyken karaktere çarpmasýn diye
+        }
+
         if (this.anim.GetCurrentAnimatorStateInfo(0).IsName("shot") && isHoldBall) //Bu kod burada yazan mevcut animasyon yürütüldüðü sýrada animasyonun ortalarýnda 1 kez çalýþýr ve true deðeri verir.
         {
             sayac1++;
-            Debug.Log("Animasyon Runnn : "+sayac1);
+            //Debug.Log("Animasyon Runnn : "+sayac1);
             time += Time.deltaTime; //Animasyonda karakterin topu elinden çýkarmasý için gereken süre
             if (time < 0.1) //Burada yazan kodlar gereksiz çünkü zaten bu satýrlar 1 kez çaðrýlýr.
             {
                 
                 Debug.Log(time);
                 transform.rotation = Quaternion.Euler(0, 0, 0);
-                Debug.Log("not playing");
+                //Debug.Log("not playing");
                 transform.parent = sceneTransform.transform;
                 rigidbody.constraints = RigidbodyConstraints.None;
                 rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;

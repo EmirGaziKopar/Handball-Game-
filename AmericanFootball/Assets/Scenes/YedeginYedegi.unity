@@ -48311,16 +48311,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1759936011}
   - component: {fileID: 1759936020}
-  - component: {fileID: 1759936019}
-  - component: {fileID: 1759936017}
-  - component: {fileID: 1759936016}
-  - component: {fileID: 1759936015}
   - component: {fileID: 1759936014}
   - component: {fileID: 1759936013}
   - component: {fileID: 1759936012}
+  - component: {fileID: 1759936018}
   m_Layer: 0
   m_Name: Rakip
-  m_TagString: character
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48359,12 +48356,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 000706ece9464b249bc0c94dbcee66f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Everything: {fileID: 327262577}
+  TriggerSayac: 0
   moveRight: 0
   front: {fileID: 1523577224}
   back: {fileID: 2112251417}
   Ball: {fileID: 6773739714594427919}
   walk: {fileID: 1759936020}
   isGrounded: 0
+  rightHand: {fileID: 1705723176}
 --- !u!65 &1759936013
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48394,61 +48394,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 114
   m_CollisionDetection: 0
---- !u!114 &1759936015
-MonoBehaviour:
+--- !u!65 &1759936018
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1759936010}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a059d87d3bbfb0e4cb539cca61367aae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ball: {fileID: 41317744}
-  rightHand: {fileID: 1705723176}
-  YayEtkisiCollider: {fileID: 41317746}
---- !u!114 &1759936016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1759936010}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3590e09ce425a21478bed4f9b08d6613, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1759936017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1759936010}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43e1f05729699c548bd8ae3b7f99eb65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sens: 101
-  yRot: 0
---- !u!114 &1759936019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1759936010}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 175fc637673affa40a41ba54fbed9ca4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpPower: 300
-  velocity: 5
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.78886724, z: 1.9841309}
+  m_Center: {x: 0, y: 0.10556638, z: 0.042419434}
 --- !u!95 &1759936020
 Animator:
   serializedVersion: 3
@@ -48459,7 +48417,7 @@ Animator:
   m_GameObject: {fileID: 1759936010}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a2fedd1c0f3859146ab22224a89bb204, type: 2}
+  m_Controller: {fileID: 9100000, guid: f45cd6bf824725d4d8f1a78e2ac52669, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

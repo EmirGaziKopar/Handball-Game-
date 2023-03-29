@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class ComputerController : MonoBehaviour
 {
+    Collider BallCollider;
+
     Rigidbody rigidbody;
+    Rigidbody BallRigidbody;
+    public Transform Everything;
+    public int TriggerSayac;
+
     float randomTime;
     float timer;
     int sayac;
@@ -29,6 +35,41 @@ public class ComputerController : MonoBehaviour
     float slowlyWalkEffect;
 
 
+    /*Catch The Ball*/
+    public Transform rightHand;
+    public static bool isTouchingComputer;
+    //BallMovement ballMovement; Buraya ters yönlü kendi fonksiyonunu yazman lazým trigger ile referansýný alýrsýn zaten onu sakla ve sonrasý için kullan 
+    public static bool isHoldTheBallComputer; //trigger enter olduðunda true exit olduðunda false olacak
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "ball") //henüz topu tutmadýysa çalýþsýn
+        {
+            if (TriggerSayac < 1)
+            {
+                Debug.Log("isTriggerGiriþ");
+                isHoldTheBallComputer = true;
+                Ball.transform.parent = rightHand.transform;
+                Ball.transform.position = rightHand.transform.position;
+                Ball.transform.rotation = Quaternion.Euler(0, 0, 0);
+                Ball.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+                TriggerSayac++;
+            }
+            
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "ball")
+        {
+            Debug.Log("isTriggerCikis");
+            TriggerSayac = 0; //eðer çalýþýrsa atýþ mekaniðini giriþ çýkýþ üzerinden kurmayý deneyebilirsin.
+        }
+    }
+
+
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "stadium")
@@ -36,11 +77,14 @@ public class ComputerController : MonoBehaviour
 
             isGrounded = true;
             walk.SetBool("backflip", false); // yere düþünce zýplama animasyonu durmalý
+
         }
     }
     // Start is called before the first frame update
     void Start()
     {
+        BallCollider = Ball.GetComponent<Collider>();
+        BallRigidbody = Ball.GetComponent<Rigidbody>();
         ballDistance = 6f;
         rigidbody = GetComponent<Rigidbody>();
         //StartCoroutine(getRandomTimeAndMove(randomTime)); //Bu fonksiyona geldikten sonra fonksiyon içerisindeki kodlar belirlenen süre kadar eþyordamlý olarak çalýþmaya devam eder.
@@ -63,6 +107,9 @@ public class ComputerController : MonoBehaviour
             }
 
         }
+
+
+        //Ball.GetComponent<Collider>().enabled = false;
     }
 
     private void Update()
@@ -155,13 +202,38 @@ public class ComputerController : MonoBehaviour
             }
             
             yield return new WaitForFixedUpdate();
+            
         }
         //smoothness = 0;
         timer = 0;
         this.sayac = 0;//Bunu yaparak belirlenen rastgele süre bittiðinde tekrar rakibin hareket etmesini saðlarýz.
         randomTime = 0;
+        if(BallRigidbody != null)
+        {
+            shoot();
+        }
+        
+        
     }
 
+
+    void shoot()
+    {
+        Debug.Log("computer : "+isHoldTheBallComputer);
+        Debug.Log("player : "+BallMovement.isHoldBall);
+        if (BallMovement.isHoldBall == false && isHoldTheBallComputer)
+        {
+            Debug.Log("Buraya Giriyor");
+            BallRigidbody.velocity = new Vector3(0f, 0f, -115f);
+            
+            Ball.transform.parent = Everything;
+            BallRigidbody.constraints = RigidbodyConstraints.None;
+            BallRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+            BallCollider.enabled = true;
+            isHoldTheBallComputer = false;
+        }
+        
+    }
 
     public void letsMove()
     {

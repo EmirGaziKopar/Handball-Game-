@@ -18,7 +18,7 @@ public class CatchBall : MonoBehaviour
         ballMovement = GetComponent<BallMovement>();
        // firstPosition = ballMovement.GetComponent<Transform>().transform.position;
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other) 
     {
         if (other.gameObject.CompareTag("ball"))
         {
