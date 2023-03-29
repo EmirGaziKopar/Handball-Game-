@@ -92,7 +92,7 @@ public class ComputerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isFastShotComputer = true; //**Son eklenen
+        isFastShotComputer = false; //**Son eklenen
         ComputerIsShothing = false;
         isHoldTheBallComputer = false;
         BallCollider = Ball.GetComponent<Collider>();
@@ -123,7 +123,7 @@ public class ComputerController : MonoBehaviour
         //Top elimde deðilse ve hýzlý deðilse ve bana yakýnsa ona yönelmem gerekir.
         //Topu tuttuktan sonra topun peþindeen gitmeye devam ederse eli bedeninin önünde olduðu için sonsuza kadar düz devam eder. 
         
-        if (Ball.position.z <= 3.5f && ballDistance < 5f && !BallMovement.isFastBall && !isHoldTheBallComputer && transform.position.z > -5f) //Buraya top rakipten çýktýktan sonra herhangi bir objeye çarpýncaya kadar true olacak bir deðer gir****
+        if (Ball.position.z <= 3.8f && ballDistance < 8f && !BallMovement.isFastBall && !isHoldTheBallComputer && transform.position.z > -5f) //Buraya top rakipten çýktýktan sonra herhangi bir objeye çarpýncaya kadar true olacak bir deðer gir****
         {          
             Debug.Log("Yavaþ ve yakýn");
             //arkamda mý önümde mi hesaplamam lazým 
@@ -156,6 +156,7 @@ public class ComputerController : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log("True : " + isFastShotComputer);
         RandomTime();
         if (isHoldTheBallComputer && (timer2 < randomShootTime))
         {
@@ -300,6 +301,7 @@ public class ComputerController : MonoBehaviour
             isHoldTheBallComputer = false;
             BallRigidbody.velocity = new Vector3(0f, 0f, -20f); //Bu kýsým kýsýtlamalar kalktýktan sonra çalýþmalýdýr. 
             //shootAnim.SetBool("shot", true);
+            isFastShotComputer = true;
         }
         
     }
