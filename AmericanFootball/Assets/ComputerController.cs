@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class ComputerController : MonoBehaviour
 {
+    public bool Sabit;
+    public float timer2;
+    public int tekShot;
+    public int randomShootTime;
+    public Animator shootAnim;
     Collider BallCollider;
-
     Rigidbody rigidbody;
     Rigidbody BallRigidbody;
     public Transform Everything;
     public int TriggerSayac;
+    public int computerShotCounter;
+
+    public bool ComputerIsShothing = false;
 
     float randomTime;
     float timer;
@@ -46,7 +53,7 @@ public class ComputerController : MonoBehaviour
     {
         if(other.gameObject.tag == "ball") //henüz topu tutmadýysa çalýþsýn
         {
-            if (TriggerSayac < 1)
+            if (TriggerSayac < 1 && BallMovement.isFastBall == false)/*Henuz fastball saðlýklý test edilmedi*/
             {
                 Debug.Log("isTriggerGiriþ");
                 isHoldTheBallComputer = true;
@@ -83,6 +90,8 @@ public class ComputerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ComputerIsShothing = false;
+        isHoldTheBallComputer = false;
         BallCollider = Ball.GetComponent<Collider>();
         BallRigidbody = Ball.GetComponent<Rigidbody>();
         ballDistance = 6f;
@@ -93,7 +102,8 @@ public class ComputerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (ballDistance < 7f) 
+        
+        if (ballDistance < 7f) //Buraya top rakipten çýktýktan sonra herhangi bir objeye çarpýncaya kadar true olacak bir deðer gir****
         {
             if (jumpStopCounter < 1) //Bu deðer karakter shot atýnca 0'lanýr
             {              
@@ -107,13 +117,55 @@ public class ComputerController : MonoBehaviour
             }
 
         }
+        //Top elimde deðilse ve hýzlý deðilse ve bana yakýnsa ona yönelmem gerekir.
+        //Topu tuttuktan sonra topun peþindeen gitmeye devam ederse eli bedeninin önünde olduðu için sonsuza kadar düz devam eder. 
+        if (ballDistance < 5f && !BallMovement.isFastBall && !isHoldTheBallComputer && transform.position.z > -5f) //Buraya top rakipten çýktýktan sonra herhangi bir objeye çarpýncaya kadar true olacak bir deðer gir****
+        {
+            Debug.Log("Yavaþ ve yakýn");
+            //arkamda mý önümde mi hesaplamam lazým 
+            if(Ball.position.z - transform.position.z < 0)
+            {
+                moveRight = 0;
+            }
+            else
+            {
+                moveRight = 1;
+            }
+            //transform.position = Vector3.MoveTowards(transform.position, Ball.position, 5f);
+            //transform.position = new Vector3(transform.position.x, 1.49f, transform.position.z);
+        }
 
+
+        if (this.shootAnim.GetCurrentAnimatorStateInfo(0).IsName("shot") && isHoldTheBallComputer && ComputerIsShothing) //computer is shooting rastgele bir süre de true olup sonra hemen false olan bir deðer.(sayaclý)
+        {
+            shoot();
+            ComputerIsShothing = false;
+            timer2 = 0; //tekrar edebilmesi için
+            shootAnim.SetBool("shot", false);//yukarýda yer alan iþlemler bittikten sonra da tekrar false yapabiliriz.
+            TriggerSayac = 0;
+        }
 
         //Ball.GetComponent<Collider>().enabled = false;
     }
 
     private void Update()
     {
+        RandomTime();
+        if (isHoldTheBallComputer && (timer2 < randomShootTime))
+        {
+            Debug.Log("Whohhoohohoh");
+            timer2 += Time.deltaTime;
+        }
+        if(isHoldTheBallComputer && !(timer2 < randomShootTime))
+        {
+            Debug.Log("ohhoohohoh");
+            ComputerIsShothing = true;
+            shootAnim.SetBool("shot", true);
+            
+            tekShot = 0;
+        }
+
+
         //sýnýr çizgiler belirlenecek distance deðeri o deðere 0.1f'den yakýn olduðu durumda karakter otomatik olarak yön deðiþtirecek yani moveRight fonksiyonuna etki edilecek
         if (sayac < 1)
         {
@@ -149,12 +201,20 @@ public class ComputerController : MonoBehaviour
         
     }
 
+
+    
+
+
     public IEnumerator getRandomTimeAndMove(float randomTime) //gelen random time süresi boyunca istenen yönde hareket etmesi için yazdýk
     {
         int sayac = 0;
         while (timer<=randomTime)
         {
             
+            if (transform.position.z < -5f)
+            {
+                moveRight = 1;
+            }
             timer += Time.deltaTime;
             if (isGrounded) //havadaysa karakter hareket edemesin.
             {
@@ -208,29 +268,43 @@ public class ComputerController : MonoBehaviour
         timer = 0;
         this.sayac = 0;//Bunu yaparak belirlenen rastgele süre bittiðinde tekrar rakibin hareket etmesini saðlarýz.
         randomTime = 0;
+        /*
         if(BallRigidbody != null)
         {
-            shoot();
+            shoot(); //****Bunun için ayrý bir enumerator fonksiyonu aç ve 1,5 arasý bir saniye sonra top atmasýný saðla o top atýlýþý yapýlýrken zýplamada olduðu gibi isGrounded gibi bir þart koy ki atýþ bitmeden hareket baþlamasýn.
         }
-        
+        */
         
     }
 
 
-    void shoot()
+    void shoot()//Animasyon kýsmýný buraya da ekle
     {
         Debug.Log("computer : "+isHoldTheBallComputer);
         Debug.Log("player : "+BallMovement.isHoldBall);
         if (BallMovement.isHoldBall == false && isHoldTheBallComputer)
         {
             Debug.Log("Buraya Giriyor");
-            BallRigidbody.velocity = new Vector3(0f, 0f, -115f);
+            
             
             Ball.transform.parent = Everything;
             BallRigidbody.constraints = RigidbodyConstraints.None;
             BallRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
             BallCollider.enabled = true;
             isHoldTheBallComputer = false;
+            BallRigidbody.velocity = new Vector3(0f, 0f, -20f); //Bu kýsým kýsýtlamalar kalktýktan sonra çalýþmalýdýr. 
+            //shootAnim.SetBool("shot", true);
+        }
+        
+    }
+
+
+    void RandomTime()
+    {
+        if (tekShot < 1)
+        {
+            randomShootTime = Random.Range(1, 4); //1,2,3
+            tekShot++;
         }
         
     }

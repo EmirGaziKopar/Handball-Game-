@@ -23,6 +23,12 @@ public class BallMovement : MonoBehaviour
     int sayac;
     public Collider BallCollider;
     int sayac1;
+
+    //baslangýcta true yaptýk çünkü karakterin elindeyken rakip oyuncu topa yönelmesin diye. Zaten rakibin elindeyken çarpýþmalarý sonucu score yazmasý da mantýksýz olurdu
+    public static bool isFastBall = true; //Bu deðiþken karakterimiz topu attýðý zaman rakip oyuncuya top doðrudan temas ederse true kalacak ve score yazýlacak
+                                           //ama eðer top arkadan veya yere sektikten sonra rakibe gelirse o zaman bu deðer false olacak ve score olarak etki etmeyecek
+                                           //ayrýca bu deðer true olduðu süre boyunca rakip oyuncu topu eline alamaz. 
+                                           //computer içerisinde de benzer bir þekilde isFastBall2 oluþturulmalý ve rakip karakter için de ayný adýmlar izlenmelidir.
     
     
 
@@ -39,6 +45,10 @@ public class BallMovement : MonoBehaviour
 
 
 
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        isFastBall = false;
     }
 
     /*private void OnCollisionEnter(Collision collision)
@@ -116,6 +126,7 @@ public class BallMovement : MonoBehaviour
                 BallMovement.isHoldBall = false; //Top elden çýktý
                 BallCollider.enabled = true; //Top elden çýktýktan sonra tekrar çarpýþabilir. Top eldeyken çarpýþabilir olmasý karakterin yüzeyine çarpýp hatalý çalýþmalara sebep oluyor.
                 //isHoldBall sisteminin yapýlma sebebi karakterde ve topta ayný anda rigidbody olduðunda birbirlerine enerji aktarýp oyun içinde hataya sebep oluyor olmalarýdýr.
+                isFastBall = true;
             }
             
         }
