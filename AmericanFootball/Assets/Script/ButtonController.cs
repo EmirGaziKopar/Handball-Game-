@@ -46,6 +46,7 @@ public class ButtonController : MonoBehaviour
     }
     public void Shoot()
     {
+        ComputerController.jumpStopCounter = 0;
         ShootButton.image.fillAmount = 0;
         //ShootButton.interactable = false;
 

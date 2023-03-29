@@ -23,7 +23,7 @@ public class FpsCounter : MonoBehaviour
             //fps göster ardýndan fpsTime degerini 0 yap
             Fps.text = "FPS: "+sayac.ToString();
             fpsTime = 0;
-            sayac = 0; //sayac gösterme iþlemi bittikten sonra 0'lanýrsa ekranda bir anlýðýna 0 deðeri görünmez.
+            sayac = 0; //sayac gösterme iþlemi , bittikten sonra 0'lanýrsa ekranda bir anlýðýna 0 deðeri görünmez.
         }
 
     }
